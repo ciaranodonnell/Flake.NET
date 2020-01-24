@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "COD.FlakeDN.Service": {
+      "commandName": "Project",
+      "commandLineArgs": "-n 100"
+    }
+  }
+}
