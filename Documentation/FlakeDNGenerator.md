@@ -4,7 +4,7 @@
 
 ## Class: FlakeIdGenerator
 
-This is the actual Id generator. To create one you need to pass it a [GeneratorParameters](generatorparameters.md) object.
+This is the actual Id generator. To create one you need to pass it a [GeneratorParameters](GeneratorParameters.md) object.
 This controls the structure of the Flake Ids that the generator will generate.
 
 ### GeneratorParameters
