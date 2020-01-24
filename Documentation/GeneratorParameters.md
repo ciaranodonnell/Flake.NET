@@ -3,7 +3,7 @@
 ## Properties
 
 | Property | Description |
-|==========|=============|
+|---|---|
 | NodeBits | The number of bits to allocate to the Node Id in the Id. This controls the number of Id generators that can exist |
 | SequenceBits | The number of bits to allocate to the Sequence Number in the Id. This controls the number of Ids that can be generated for every clock tick |
 | NodeId | The actual Node Id of this Id Generator. This is encoded in every Id it generates |
@@ -13,7 +13,7 @@
 ## Methods
 
 | Name | Parameters | Returns | Description |
-|======|============|=========|=============|
+|---|---|---|---|
 | GetSequenceNumber | Int64 Id | Int64 | Gets the SequenceId from an Id using the properties of the GeneratorParameters |
 | GetTimeStamp | Int64 Id | Int64 | Gets the Timestamp component from an Id using the properties of the GeneratorParameters |
 | GetNodeId | Int64 Id | Int64 | Gets the Node Id component from an Id using the properties of the GeneratorParameters |

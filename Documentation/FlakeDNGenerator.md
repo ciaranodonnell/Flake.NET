@@ -10,7 +10,7 @@ This controls the structure of the Flake Ids that the generator will generate.
 ### GeneratorParameters
 
 | Property | Description |
-|==========|=============|
+|:---------|:------------|
 | NodeBits | The number of bits to allocate to the Node Id in the Id. This controls the number of Id generators that can exist |
 | SequenceBits | The number of bits to allocate to the Sequence Number in the Id. This controls the number of Ids that can be generated for every clock tick |
 | NodeId | The actual Node Id of this Id Generator. This is encoded in every Id it generates |
