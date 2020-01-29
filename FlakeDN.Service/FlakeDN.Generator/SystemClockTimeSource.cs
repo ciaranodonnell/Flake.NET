@@ -8,6 +8,8 @@ namespace COD.FlakeDN.Generator
     {
         private DateTime epoch;
 
+        private static readonly int _ClockIntervalInTicks = (int)TimeSpan.FromMilliseconds(1).Ticks;
+
         public SystemClockTimeSource(DateTime epoch)
         {
             this.epoch = epoch;
@@ -19,5 +21,7 @@ namespace COD.FlakeDN.Generator
             long ms = Convert.ToInt64(DateTime.UtcNow.Subtract(epoch).TotalMilliseconds);
             return ms;
         }
+
+        public int ClockIntervalInTicks { get => _ClockIntervalInTicks; }
     }
 }

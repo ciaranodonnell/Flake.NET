@@ -25,7 +25,8 @@ namespace COD.FlakeDN.Generator.Tests
         public void Test100000AreSortable()
         {
             int testSize = 100000;
-            FlakeIdGenerator g = new FlakeIdGenerator(new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10 });
+            var p = new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10 };
+            FlakeIdGenerator g = new FlakeIdGenerator(p);
             List<Int64> ids = new List<long>(100);
             for (int x = 0; x < testSize; x++)
                 ids.Add(g.NewId());
@@ -33,7 +34,7 @@ namespace COD.FlakeDN.Generator.Tests
             for (int x = 0; x < (testSize - 1); x++)
             {
                 Assert.IsTrue(ids[x] > 0, "Ids is error " + ids.ToString());
-                Assert.IsTrue(ids[x] < ids[x + 1], $"{x} id should be less than next {g.GetIdParts(ids[x])} and {g.GetIdParts(ids[x + 1])}");
+                Assert.IsTrue(ids[x] < ids[x + 1], $"{x} id should be less than next {p.GetIdParts(ids[x])} and {p.GetIdParts(ids[x + 1])}");
             }
 
         }
@@ -53,7 +54,7 @@ namespace COD.FlakeDN.Generator.Tests
             Assert.IsTrue(ids[1] > 0, "Ids is error " + ids.ToString());
             Assert.IsTrue(ids[2] > 0, "Ids is error " + ids.ToString());
             Assert.IsTrue(ids[3] > 0, "Ids is error " + ids.ToString());
-            Assert.IsTrue(ids[4] == (long)FlakeDN.Client.FlakeDNErrors.TimeMovingBackwards, "Time reversal not detected" + ids.ToString());
+            Assert.IsTrue(ids[4] == (long)FlakeDN.Client.FlakeIdErrors.TimeMovingBackwards, "Time reversal not detected" + ids.ToString());
             Assert.IsTrue(ids[5] > 0, "Time should be back");
 
         }

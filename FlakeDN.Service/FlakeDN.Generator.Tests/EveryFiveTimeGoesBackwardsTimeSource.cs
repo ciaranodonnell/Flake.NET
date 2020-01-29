@@ -19,5 +19,7 @@ namespace COD.FlakeDN.Generator.Tests
             if (calls % 5 == 0) calls = calls - 2;
             return calls;
         }
+
+        public int ClockIntervalInTicks { get => 1; }
     }
 }
