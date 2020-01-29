@@ -1,7 +1,10 @@
 ﻿using COD.FlakeDN.Generator;
+using COD.FlakeDN.Service.Configuration;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace COD.FlakeDN.Service
@@ -10,52 +13,60 @@ namespace COD.FlakeDN.Service
     {
         static void Main(string[] args)
         {
-
-            var app = new CommandLineApplication();
-            app.Name = "flakedn";
-            app.HelpOption("-?|-h|--help");
-            var nodeOption = app.Option("-n|--node", "the node id for this generator", CommandOptionType.SingleValue);
-            var portOption = app.Option("-p|--port", "the base network port number", CommandOptionType.SingleValue);
-
-
-            app.OnExecute(() =>
+            try
             {
-                int basePortNumber = 0x1D1D;
-                int nodeId = 1;
+                // Get Configuration
+                var configuration = GetConfigurationSettings();
+                var serviceConfiguration = configuration.GetSection("serviceconfiguration").Get<ServiceConfiguration>();
 
-                if (nodeOption.HasValue())
+                var app = new CommandLineApplication();
+                app.Name = "flakedn";
+                app.HelpOption("-?|-h|--help");
+                var nodeOption = app.Option("-n|--node", "the node id for this generator", CommandOptionType.SingleValue);
+                var portOption = app.Option("-p|--port", "the base network port number", CommandOptionType.SingleValue);
+
+
+                app.OnExecute(() =>
                 {
-                    nodeId = int.Parse(nodeOption.Value());
-                }
+                   
+                    int.TryParse(nodeOption.HasValue() ? nodeOption.Value() : serviceConfiguration.NodeId, out int nodeId);
+                    int.TryParse(portOption.HasValue() ? portOption.Value() : serviceConfiguration.PortNumber, out int portNumber);
 
-                if (portOption.HasValue())
-                {
-                    nodeId = int.Parse(portOption.Value());
-                }
-                                
-                var genParams = new GeneratorParameters
-                {
-                    NodeId = nodeId
-                };
+                    if (nodeId == default)
+                        nodeId = 1;
 
-                var generator = new FlakeIdGenerator(genParams);
+                    if (portNumber == default)
+                        portNumber = 0x1D1D;
 
-                CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+                    var genParams = new GeneratorParameters
+                    {
+                        NodeId = nodeId
+                    };
+
+                    var generator = new FlakeIdGenerator(genParams);
+
+                    CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
 
-                Console.CancelKeyPress += (sender, e) => cancelTokenSource.Cancel();
+                    Console.CancelKeyPress += (sender, e) => cancelTokenSource.Cancel();
 
-                RunNetworkService(basePortNumber, generator, cancelTokenSource.Token);
+                    RunNetworkService(portNumber, generator, cancelTokenSource.Token);
 
-                Console.WriteLine("Running");
+                    Console.WriteLine("Running");
 
-                while (!cancelTokenSource.IsCancellationRequested)
-                    Console.ReadLine();
+                    while (!cancelTokenSource.IsCancellationRequested)
+                        Console.ReadLine();
 
-                return 0;
-            });
+                    return 0;
+                });
 
-            app.Execute(args);
+                app.Execute(args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
         }
 
         static List<Thread> threads = new List<Thread>();
@@ -69,6 +80,15 @@ namespace COD.FlakeDN.Service
             });
             threads.Add(thread);
             thread.Start();
+        }
+
+        private static IConfiguration GetConfigurationSettings()
+        {
+            var configBuilder = new ConfigurationBuilder()
+                                    .SetBasePath(Directory.GetCurrentDirectory())
+                                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            return configBuilder.Build();
         }
     }
 }
