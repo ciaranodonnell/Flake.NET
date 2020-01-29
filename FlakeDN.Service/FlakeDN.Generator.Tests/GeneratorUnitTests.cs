@@ -14,7 +14,7 @@ namespace COD.FlakeDN.Generator.Tests
         [Test]
         public void TestGetAnId()
         {
-            FlakeIdGenerator g = new FlakeIdGenerator(new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10, TimestampBits = 41 });
+            FlakeIdGenerator g = new FlakeIdGenerator(new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10});
 
             g.NewId();
         }
@@ -25,7 +25,7 @@ namespace COD.FlakeDN.Generator.Tests
         public void Test100000AreSortable()
         {
             int testSize = 100000;
-            FlakeIdGenerator g = new FlakeIdGenerator(new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10, TimestampBits = 41 });
+            FlakeIdGenerator g = new FlakeIdGenerator(new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10 });
             List<Int64> ids = new List<long>(100);
             for (int x = 0; x < testSize; x++)
                 ids.Add(g.NewId());
@@ -44,7 +44,7 @@ namespace COD.FlakeDN.Generator.Tests
         {
             var timesource = new EveryFiveTimeGoesBackwardsTimeSource();
 
-            FlakeIdGenerator g = new FlakeIdGenerator(new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10, TimestampBits = 41, TimeSource = timesource });
+            FlakeIdGenerator g = new FlakeIdGenerator(new GeneratorParameters { NodeId = 111, NodeBits = 12, SequenceBits = 10, TimeSource = timesource });
             List<Int64> ids = new List<long>(100);
             for (int x = 0; x < 6; x++)
                 ids.Add(g.NewId());
