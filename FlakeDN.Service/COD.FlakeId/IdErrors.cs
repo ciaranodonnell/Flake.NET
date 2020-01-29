@@ -4,10 +4,11 @@ using System.Text;
 
 namespace COD.FlakeDN.Client
 {
-    public enum FlakeDNErrors : Int64
+    public enum FlakeIdErrors : Int64
     {
         InvalidAuthCode = -1,
         TimeMovingBackwards = -2,
-        SequenceExhausted = -3
+        SequenceExhausted = -3,
+        TimestampDoesntFitInBits = -4
     }
 }

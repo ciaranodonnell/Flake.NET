@@ -21,5 +21,9 @@ namespace COD.FlakeDN.Generator.Tests
         }
 
         public int Calls { get => calls; }
+
+
+        public int ClockIntervalInTicks { get => 1; }
+
     }
 }

@@ -7,7 +7,7 @@ using System.Net.Sockets;
 
 namespace COD.FlakeDN.Client
 {
-    public class FlakeDNClient
+    public class FlakeDNClient : IFlakeIdGenerator
     {
         private string server;
         private int port;
@@ -23,15 +23,15 @@ namespace COD.FlakeDN.Client
             this.authToken = authToken;
             this.client = new TcpClient();
 
-            
+
         }
 
-        public Int64 GetId()
+        public Int64 NewId()
         {
-            return GetIds().First();
+            return NewIds().First();
         }
 
-        public IEnumerable<Int64> GetIds(int numberOfIds = 1)
+        public IEnumerable<Int64> NewIds(int numberOfIds = 1)
         {
             lock (LockObject)
             {
@@ -54,7 +54,7 @@ namespace COD.FlakeDN.Client
 
 
                 writer.Flush();
-                
+
                 List<Int64> ids = new List<long>();
 
                 for (int x = 0; x < numberOfIds; x++)

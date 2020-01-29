@@ -1,9 +1,10 @@
 ﻿using COD.FlakeDN.Client;
 using System;
+using System.Collections.Generic;
 
 namespace COD.FlakeDN.Generator
 {
-    public class FlakeIdGenerator
+    public class FlakeIdGenerator : IFlakeIdGenerator
     {
         private long nodeId;
         private int timestampLeftShift;
@@ -37,6 +38,17 @@ namespace COD.FlakeDN.Generator
 
         }
 
+        public IEnumerable<long> NewIds(int numberOfIds)
+        {
+
+            // this is one potential implementation. You get the ids generated as you consume them from the enumerable, preserving sortablility as best we can.
+            // this comes at the cost of re-entering the lock for every Id which has a cost to it too.
+            // if that is be avoided we'd need to refactor the inside of the lock to a seperate private method and promote the lock to the public methods. 
+            // You'd then want to generate them straight into a list to prevent holding the lock while clients enumerate the enumerable
+
+            for (int x = 0; x<numberOfIds; x++)
+                yield return NewId();
+        }
 
         public Int64 NewId()
         {
@@ -46,7 +58,7 @@ namespace COD.FlakeDN.Generator
 
                 if (time < lastTime)
                 {
-                    return (Int64)FlakeDNErrors.TimeMovingBackwards;
+                    return (Int64)FlakeIdErrors.TimeMovingBackwards;
                 }
 
 
@@ -65,7 +77,7 @@ namespace COD.FlakeDN.Generator
                         else
                         {
                             //check if sequence will loop for the current millisecond number. return error
-                            return (long)FlakeDNErrors.SequenceExhausted;
+                            return (long)FlakeIdErrors.SequenceExhausted;
                         }
                     }
                     else
@@ -86,13 +98,6 @@ namespace COD.FlakeDN.Generator
         }
 
 
-        public string GetIdParts(long Id)
-        {
-            var milliseconds = Id >> timestampLeftShift;
-            var sequence = Id & sequenceMask;
-            var node = (Id & nodeMask) >> sequenceBits;
-
-            return $"MS={milliseconds} (which is {TimeSpan.FromMilliseconds(milliseconds).ToString()}), Node = {node}, sequence = {sequence}";
-        }
+ 
     }
 }
