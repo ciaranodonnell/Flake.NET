@@ -17,7 +17,7 @@ namespace COD.FlakeDN.Service
             {
                 // Get Configuration
                 var configuration = GetConfigurationSettings();
-                var serviceConfiguration = configuration.GetSection("serviceconfiguration").Get<ServiceConfiguration>();
+                var serviceConfiguration = configuration.GetSection("serviceConfiguration").Get<ServiceConfiguration>();
 
                 var app = new CommandLineApplication();
                 app.Name = "flakedn";
@@ -28,7 +28,7 @@ namespace COD.FlakeDN.Service
 
                 app.OnExecute(() =>
                 {
-                   
+
                     int.TryParse(nodeOption.HasValue() ? nodeOption.Value() : serviceConfiguration.NodeId, out int nodeId);
                     int.TryParse(portOption.HasValue() ? portOption.Value() : serviceConfiguration.PortNumber, out int portNumber);
 
